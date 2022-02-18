@@ -192,5 +192,30 @@ namespace Awaken.Contracts.Farm
             };
 
         }
+
+        public override Int64Value GetRedepositAmount(GetRedepositAmountInput input)
+        {
+            return new Int64Value
+            {
+                Value = State.RedepositAmount[input.Pid][input.User]
+            };
+        }
+
+        public override Int64Value GetTotalAllocPoint(Empty input)
+        {
+            return new Int64Value()
+            {
+                Value = State.TotalAllocPoint.Value
+            };
+        }
+
+        public override Int64Value GetPoolLength(Empty input)
+        {
+            return new Int64Value()
+            {
+                Value = State.PoolLength.Value
+            };
+        }
     }
+    
 }
