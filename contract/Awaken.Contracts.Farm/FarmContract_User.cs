@@ -84,8 +84,8 @@ namespace Awaken.Contracts.Farm
                 AmountAMin = 0,
                 AmountBDesired = input.ElfAmount,
                 AmountBMin = 0,
-                Channel = "",
-                Deadline = Context.CurrentBlockTime.AddMinutes(1),
+                Channel = input.Channel,
+                Deadline = Context.CurrentBlockTime.AddMinutes(2),
                 To = Context.Self
             });
              Context.SendInline(Context.Self, nameof(DepositLp), new DepositLpInput

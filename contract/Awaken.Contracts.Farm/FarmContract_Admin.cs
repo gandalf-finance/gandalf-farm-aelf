@@ -135,11 +135,6 @@ namespace Awaken.Contracts.Farm
         public override Empty DepositLp(DepositLpInput input)
         {
             Assert(Context.Self == Context.Sender,"Invalid");
-            if (State.TokenContract.Value == null)
-            {
-                State.TokenContract.Value =
-                    Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
-            }
 
             var lpBalance = State.LpTokenContract.GetBalance.Call(new Token.GetBalanceInput()
             {
@@ -177,10 +172,10 @@ namespace Awaken.Contracts.Farm
                 Symbol = GetTokenPairSymbol(DistributeToken, "ELF"),
                 Spender = State.FarmTwoPoolContract.Value
             });
-            State.FarmTwoPoolContract.Deposit.Send(new Gandalf.Contracts.PoolTwoContract.DepositInput()
+            State.FarmTwoPoolContract.ReDeposit.Send(new Gandalf.Contracts.PoolTwoContract.ReDepositInput()
             {
                 Amount = new BigIntValue(lpBalance),
-                Pid = 0
+                User = input.Sender
             });
             State.RedepositAmount[input.Pid][input.Sender] =
                 input.DistributeTokenAmount.Add(input.DistributeTokenBalance).Sub(distributeTokenBalanceAfter);
