@@ -1,4 +1,3 @@
-using System;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
@@ -172,7 +171,7 @@ namespace Awaken.Contracts.Farm
                 Symbol = GetTokenPairSymbol(DistributeToken, "ELF"),
                 Spender = State.FarmTwoPoolContract.Value
             });
-            State.FarmTwoPoolContract.ReDeposit.Send(new Gandalf.Contracts.PoolTwoContract.ReDepositInput()
+            State.FarmTwoPoolContract.ReDeposit.Send(new Contracts.PoolTwoContract.ReDepositInput()
             {
                 Amount = new BigIntValue(lpBalance),
                 User = input.Sender

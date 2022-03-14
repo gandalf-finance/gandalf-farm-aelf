@@ -6,6 +6,8 @@ using AElf.CSharp.Core;
 using AElf.Kernel;
 using AElf.Kernel.Blockchain.Application;
 using AElf.Types;
+using Awaken.Contracts.PoolTwoContract;
+using Awaken.Contracts.Swap;
 using Awaken.Contracts.Token;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -369,6 +371,7 @@ namespace Awaken.Contracts.Farm
         public async Task RedepositTest()
         {
             await Initialize();
+            await InitializeContract();
             var allocPoint = 10;
             var symbol = GetTokenPairSymbol("ELF", "TEST");
             await AdminStub.AddPool.SendAsync(new AddPoolInput()
@@ -403,15 +406,21 @@ namespace Awaken.Contracts.Farm
 
             await UserTomStub.ReDeposit.SendAsync(new ReDepositInput()
             {
-                DistributeTokenAmount = 10000000,
+                DistributeTokenAmount = 10000000000,
                 ElfAmount = 10000000,
                 Pid = 0
             });
+            var result = await AdminPoolTwoContractStub.UserInfo.CallAsync(new UserInfoInput()
+            {
+                Pid = 0,
+                User = UserTomAddress
+            });
+            result.Amount.ShouldNotBe(0);
         }
         private static string GetTokenPairSymbol(string tokenA, string tokenB)
         {
             var symbols = RankSymbols(tokenA, tokenB);
-            return $"GLP {symbols[0]}-{symbols[1]}";
+            return $"ALP {symbols[0]}-{symbols[1]}";
         }
         private static string[] RankSymbols(params string[] symbols)
         {
@@ -615,7 +624,48 @@ namespace Awaken.Contracts.Farm
                 Symbol = "USDT"
             });
         }
+         // constants
+         private const string DISTRIBUTETOKEN = "AWAKEN";
+         private const string LPTOKEN_01 = "AAAE";
+         private const string LPTOKEN_02 = "AAAB";
+         private const long HalvingPeriod = 500;
 
+         private async Task InitializeContract()
+         {
+        
+             await AdminPoolTwoContractStub.Initialize.SendAsync(new PoolTwoContract.InitializeInput
+             {
+                 Owner = AdminAddress,
+                 DistributeToken = DISTRIBUTETOKEN,
+                 HalvingPeriod = HalvingPeriod,
+                 StartBlock = 50,
+                 TotalReward = 9375000,
+                 DistributeTokenPerBlock = 10000,
+                 AwakenTokenContract = LpTokenContractAddress
+             });
+             await AdminLpStub.SetOwner.SendAsync(RouterContractAddress);
+             await AdminAwakenSwapContractStub.Initialize.SendAsync(new Swap.InitializeInput()
+             {
+                 Admin = AdminAddress,
+                 AwakenTokenContractAddress = LpTokenContractAddress
+             });
+             await AdminAwakenSwapContractStub.SetFeeRate.SendAsync(new Int64Value(){Value = 30});
+             
+             var allocPoint = 10;
+             await AdminPoolTwoContractStub.SetFarmPoolOne.SendAsync(FarmContractAddress);
+             await AdminAwakenSwapContractStub.CreatePair.SendAsync(new CreatePairInput()
+             {
+                 SymbolPair = "ELF-AWAKEN"
+             });
+              await AdminPoolTwoContractStub.Add.SendAsync(new PoolTwoContract.AddInput
+             {
+                 AllocPoint = allocPoint,
+                 LpToken = GetTokenPairSymbol("ELF",DISTRIBUTETOKEN),
+                 WithUpdate = false
+             });
+            
+         }
+        
          private async Task<long> GetCurrentBlockHeight()
          {
              var blockChain = Application.ServiceProvider.GetRequiredService<IBlockchainService>();

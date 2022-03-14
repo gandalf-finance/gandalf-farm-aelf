@@ -37,6 +37,8 @@ service TokenContract {
     }
     rpc ResetExternalInfo (ResetExternalInfoInput) returns (google.protobuf.Empty){
     }
+    rpc SetOwner(aelf.Address) returns(google.protobuf.Empty){
+    }
 
     // Views
     rpc GetTokenInfo (GetTokenInfoInput) returns (TokenInfo) {

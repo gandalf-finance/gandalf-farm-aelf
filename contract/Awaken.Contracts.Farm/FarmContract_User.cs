@@ -1,9 +1,7 @@
-using System;
 using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core;
 using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
-using AElf.Types;
 using Awaken.Contracts.Swap;
 using Google.Protobuf.WellKnownTypes;
 namespace Awaken.Contracts.Farm

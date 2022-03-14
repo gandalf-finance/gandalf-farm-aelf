@@ -17,7 +17,7 @@ using Awaken.Contracts.Swap;
 using Awaken.Contracts.Token;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Threading;
-using Gandalf.Contracts.PoolTwoContract;
+using Awaken.Contracts.PoolTwoContract;
 
 namespace Awaken.Contracts.Farm
 {
@@ -50,6 +50,18 @@ namespace Awaken.Contracts.Farm
             return Application.ServiceProvider.GetRequiredService<IContractTesterFactory>()
                 .Create<AElf.Contracts.MultiToken.TokenContractContainer.TokenContractStub>(tokenContractAddress, senderKeyPair);
         }
+        
+        internal PoolTwoContract.PoolTwoContractContainer.PoolTwoContractStub GetPoolTwoContractStub(ECKeyPair senderKeyPair)
+        {
+            return Application.ServiceProvider.GetRequiredService<IContractTesterFactory>()
+                .Create<PoolTwoContractContainer.PoolTwoContractStub>(PoolTwoContractAddress, senderKeyPair);
+        }
+        
+        internal AwakenSwapContractContainer.AwakenSwapContractStub GetAwakenSwapContractStub(ECKeyPair senderKeyPair)
+        {
+            return Application.ServiceProvider.GetRequiredService<IContractTesterFactory>()
+                .Create<AwakenSwapContractContainer.AwakenSwapContractStub>(RouterContractAddress, senderKeyPair);
+        }
 
         public FarmContractTestBase()
         {
@@ -61,7 +73,7 @@ namespace Awaken.Contracts.Farm
                 File.ReadAllBytes(typeof(Token.TokenContract).Assembly.Location), SampleAccount.Accounts[0].KeyPair));
             PoolTwoContractAddress  = AsyncHelper.RunSync(() => DeployContractAsync(
                 KernelConstants.DefaultRunnerCategory,
-                File.ReadAllBytes(typeof(PoolTwoContract).Assembly.Location), SampleAccount.Accounts[0].KeyPair));
+                File.ReadAllBytes(typeof(PoolTwoContract.PoolTwoContract).Assembly.Location), SampleAccount.Accounts[0].KeyPair));
             RouterContractAddress = AsyncHelper.RunSync(() => DeployContractAsync(
                 KernelConstants.DefaultRunnerCategory,
                 File.ReadAllBytes(typeof(AwakenSwapContract).Assembly.Location), SampleAccount.Accounts[0].KeyPair));
@@ -109,5 +121,11 @@ namespace Awaken.Contracts.Farm
 
         internal Awaken.Contracts.Token.TokenContractContainer.TokenContractStub TomLpStub =>
             GetLpContractStub(UserTomKeyPair);
+        
+        internal PoolTwoContractContainer.PoolTwoContractStub AdminPoolTwoContractStub =>
+            GetPoolTwoContractStub(AdminKeyPair);
+        
+        internal AwakenSwapContractContainer.AwakenSwapContractStub AdminAwakenSwapContractStub =>
+            GetAwakenSwapContractStub(AdminKeyPair);
     }
 }

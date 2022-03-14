@@ -4,7 +4,6 @@ using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
 using AElf.Types;
 using Awaken.Contracts.Token;
-using Google.Protobuf.WellKnownTypes;
 using IssueInput = AElf.Contracts.MultiToken.IssueInput;
 using TransferInput = AElf.Contracts.MultiToken.TransferInput;
 

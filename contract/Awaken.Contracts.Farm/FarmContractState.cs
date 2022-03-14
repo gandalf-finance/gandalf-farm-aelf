@@ -17,7 +17,7 @@ namespace Awaken.Contracts.Farm
         
         internal Awaken.Contracts.Swap.AwakenSwapContractContainer.AwakenSwapContractReferenceState RouterContract { get; set; }
         
-        internal Gandalf.Contracts.PoolTwoContract.PoolTwoContractContainer.PoolTwoContractReferenceState FarmTwoPoolContract { get; set; }
+        internal Awaken.Contracts.PoolTwoContract.PoolTwoContractContainer.PoolTwoContractReferenceState FarmTwoPoolContract { get; set; }
         public SingletonState<Address> Admin { get; set; }
         public SingletonState<Address> Owner { get; set; }
         /// <summary>
