@@ -233,7 +233,7 @@ namespace Awaken.Contracts.Farm
                .Mul(pool.AllocPoint)
                .Div(State.TotalAllocPoint.Value);
            State.PoolInfoMap[pid].AccUsdtPerShare = pool.AccUsdtPerShare.Add(
-               usdtReward.Mul(multiplier).Div(lpSupply)
+               usdtReward.Mul(Multiplier).Div(lpSupply)
            );
       
            State.PoolInfoMap[pid].LastRewardBlock = Context.CurrentHeight;
