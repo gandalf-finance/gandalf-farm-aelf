@@ -176,8 +176,8 @@ namespace Awaken.Contracts.Farm
                 Amount = new BigIntValue(lpBalance),
                 User = input.Sender
             });
-            State.RedepositAmount[input.Pid][input.Sender] =
-                input.DistributeTokenAmount.Add(input.DistributeTokenBalance).Sub(distributeTokenBalanceAfter);
+            State.RedepositAmount[input.Pid][input.Sender] = State.RedepositAmount[input.Pid][input.Sender].Add(input.DistributeTokenAmount)
+                .Add(input.DistributeTokenBalance).Sub(distributeTokenBalanceAfter);
             return new Empty();
         }
 
