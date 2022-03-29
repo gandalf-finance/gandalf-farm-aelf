@@ -283,9 +283,9 @@ namespace Awaken.Contracts.Farm
                     Context.Fire(new ClaimRevenue
                     {
                         User = user,
-                        Amount = pendingAmount,
+                        Amount = new BigIntValue(pendingAmount),
                         Pid = pid,
-                        Token = DistributeToken
+                        TokenType = 0
                     });
                 }
 
@@ -299,9 +299,9 @@ namespace Awaken.Contracts.Farm
                     Context.Fire(new ClaimRevenue
                     {
                         User = user,
-                        Amount = usdtReward,
+                        Amount = new BigIntValue(usdtReward),
                         Pid = pid,
-                        Token = Usdt
+                        TokenType = 1
                     });
                 }
             }
@@ -365,9 +365,9 @@ namespace Awaken.Contracts.Farm
                     Context.Fire(new ClaimRevenue
                     {
                         User = user,
-                        Amount = pendingAmount,
+                        Amount = new BigIntValue(pendingAmount),
                         Pid = pid,
-                        Token = DistributeToken
+                        TokenType = 0
                     });
                 }
 
@@ -381,9 +381,9 @@ namespace Awaken.Contracts.Farm
                     Context.Fire(new ClaimRevenue
                     {
                         User = user,
-                        Amount = usdtReward,
+                        Amount = new BigIntValue(usdtReward),
                         Pid = pid,
-                        Token = Usdt
+                        TokenType = 1
                     });
                 }
             }
