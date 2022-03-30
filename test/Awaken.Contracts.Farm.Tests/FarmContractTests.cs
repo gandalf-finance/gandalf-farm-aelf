@@ -448,8 +448,27 @@ namespace Awaken.Contracts.Farm
             await AdminStub.FixEndBlock.SendAsync(new BoolValue() {Value = false});
             var endBlockNew = await AdminStub.GetEndBlock.CallAsync(new Empty());
             endBlockNew.Value.Sub(startBlock).ShouldBe(10500);
+            var allocPoint = 10;
+            var symbol = GetTokenPairSymbol("ELF", "TEST");
+            await AdminStub.AddPool.SendAsync(new AddPoolInput()
+            {
+                AllocPoint = allocPoint,
+                LpToken = symbol,
+                WithUpdate = false
+            });
             
-        
+            var amount = 10000000000;
+            await UserTomStub.Deposit.SendAsync(new DepositInput()
+            {
+                Pid = 0,
+                Amount = amount
+            });
+            await SkipToBlockHeight(startBlock.Add(10));
+            period0New = period0New.Add(100);
+            await AdminStub.SetHalvingPeriod.SendAsync(new SetHalvingPeriodInput() {Block0 = period0New, Block1 = period1});
+            var endBlockSecond = await AdminStub.GetEndBlock.CallAsync(new Empty());
+            endBlockSecond.Value.Sub(startBlock).ShouldBeLessThan(10500);
+
         }
         private static string GetTokenPairSymbol(string tokenA, string tokenB)
         {

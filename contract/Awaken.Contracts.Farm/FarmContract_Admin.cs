@@ -25,16 +25,20 @@ namespace Awaken.Contracts.Farm
         public override Empty SetHalvingPeriod(SetHalvingPeriodInput input)
         {
             AssertSenderIsAdmin();
+            MassUpdatePoolsInternal();
             State.HalvingPeriod0.Value = input.Block0;
             State.HalvingPeriod1.Value = input.Block1;
+            FixEndBlockInternal(false);
             return new Empty();
         }
 
         public override Empty SetDistributeTokenPerBlock(SetDistributeTokenPerBlockInput input)
         {
             AssertSenderIsAdmin();
+            MassUpdatePoolsInternal();
             State.DistributeTokenPerBlockConcentratedMining.Value = input.PerBlock0;
             State.DistributeTokenPerBlockContinuousMining.Value = input.PerBlock1;
+            FixEndBlockInternal(false);
             return new Empty();
         }
 
