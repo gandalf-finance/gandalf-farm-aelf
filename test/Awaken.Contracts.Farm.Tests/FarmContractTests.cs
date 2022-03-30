@@ -417,6 +417,40 @@ namespace Awaken.Contracts.Farm
             });
             result.Amount.ShouldNotBe(0);
         }
+        [Fact]
+        public async Task FixEndBlockTest()
+        {
+            await CreateAndGetToken();
+            var height = await GetCurrentBlockHeight();
+            var startBlock = height.Add(10);
+            var distributeTokenPerBlock0 = 100_00000000;
+            var distributeTokenPerBlock1 = 50_00000000;
+            var period0 = 1000;
+            var period1 = 4000;
+            var totalReward = 562500_00000000;
+            var period0New = 2000;
+            await AdminStub.Initialize.SendAsync(new InitializeInput()
+            {
+                LpTokenContract = LpTokenContractAddress,
+                Admin = AdminAddress,
+                Block0 = period0,
+                Block1 = period1,
+                Cycle = 50,
+                DistributeTokenPerBlock0 = distributeTokenPerBlock0,
+                DistributeTokenPerBlock1 = distributeTokenPerBlock1,
+                StartBlock = startBlock ,
+                TotalReward = totalReward
+            });
+            var endBlock = await AdminStub.GetEndBlock.CallAsync(new Empty());
+            endBlock.Value.Sub(startBlock).ShouldBe(20000);
+
+            await AdminStub.SetHalvingPeriod.SendAsync(new SetHalvingPeriodInput() {Block0 = period0New, Block1 = period1});
+            await AdminStub.FixEndBlock.SendAsync(new BoolValue() {Value = false});
+            var endBlockNew = await AdminStub.GetEndBlock.CallAsync(new Empty());
+            endBlockNew.Value.Sub(startBlock).ShouldBe(10500);
+            
+        
+        }
         private static string GetTokenPairSymbol(string tokenA, string tokenB)
         {
             var symbols = RankSymbols(tokenA, tokenB);

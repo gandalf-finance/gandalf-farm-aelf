@@ -748,7 +748,7 @@ namespace Awaken.Contracts.Farm
                  return;
              }
              blockHeightEnd = blockHeightBegin.Add(rewardPending.Div(State.DistributeTokenPerBlockContinuousMining.Value.Div(halfLevel)));
-             rewardRest = rewardPending.Sub(_reward);
+             rewardRest = 0;
              
          }
 
