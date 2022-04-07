@@ -288,8 +288,8 @@ namespace Awaken.Contracts.Farm
             //SetTool
             await AdminStub.SetTool.SendAsync(UserTomAddress);
             //SetHalvingPeriod
-            var block0 = 10;
-            var block1 = 20;
+            var block0 = 50;
+            var block1 = 110;
             await AdminStub.SetHalvingPeriod.SendAsync(new SetHalvingPeriodInput()
             {
                 Block0 = block0,

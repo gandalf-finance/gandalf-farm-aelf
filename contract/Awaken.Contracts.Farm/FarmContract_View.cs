@@ -171,9 +171,9 @@ namespace Awaken.Contracts.Farm
                     pool.LastRewardBlock, out var blockReward,out var blockLockReward
                 );
 
-                blockLockReward = blockLockReward.Mul(pool.AllocPoint).Div(
+                blockLockReward = Parse(new BigIntValue(blockLockReward).Mul(pool.AllocPoint).Div(
                     State.TotalAllocPoint.Value
-                );
+                ).Value);
 
                 accLockDistributeTokenPerShare = accLockDistributeTokenPerShare.Add(new BigIntValue(blockLockReward)
                     .Mul(Multiplier).Div(pool.TotalAmount)
